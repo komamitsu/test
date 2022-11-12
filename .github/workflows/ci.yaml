@@ -24,6 +24,11 @@ jobs:
         with:
           arguments: installDist
 
+      - name: Debug
+        run: |
+            pwd
+            ls -l
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
