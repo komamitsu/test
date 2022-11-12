@@ -27,8 +27,7 @@ jobs:
       - name: Debug
         run: |
             pwd
-            ls -l
-            ls -l build
+            ls -l build/install
 
       - name: Build and push
         uses: docker/build-push-action@v3
