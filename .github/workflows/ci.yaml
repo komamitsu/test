@@ -42,7 +42,8 @@ jobs:
         if: ${{ failure() }}
         uses: dacbd/create-issue-action@main
         with:
-          token: ${{ github.token }}
+          # token: ${{ github.token }}
+          token: ${{ secrets.PAT }}
           repo: private-test
           title: Action workflow failed.
           body: |
