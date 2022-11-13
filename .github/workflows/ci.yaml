@@ -38,20 +38,17 @@ jobs:
           format: 'table'
           severity: 'CRITICAL,HIGH'
 
-#     - name: Run Trivy vulnerability scanner in repo mode #2
-#       if: always()
-#       uses: aquasecurity/trivy-action@master
-#       with:
-#         # scan-type: 'fs'
-#         image-ref: test:latest
-#         ignore-unfixed: true
-#         format: 'sarif'
-#         output: 'trivy-results.sarif'
-#         severity: 'CRITICAL,HIGH'
-
-#     - name: Upload Trivy scan results to GitHub Security tab
-#       if: always()
-#       uses: github/codeql-action/upload-sarif@v2
-#       with:
-#         sarif_file: 'trivy-results.sarif'
-
+      - name: Create Issue on Failed workflow
+        if: ${{ failure() }}
+        uses: dacbd/create-issue-action@main
+        with:
+          token: ${{ github.token }}
+          title: Action workflow failed.
+          body: |
+            ### Context
+            [Failed Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            [Codebase](https://github.com/${{ github.repository }}/tree/${{ github.sha }})
+            Workflow name - `${{ github.workflow }}`
+            Job -           `${{ github.job }}`
+            status -        `${{ job.status }}`
+          assignees: komamitsu
