@@ -43,6 +43,7 @@ jobs:
         uses: dacbd/create-issue-action@main
         with:
           token: ${{ github.token }}
+          repo: private-test
           title: Action workflow failed.
           body: |
             ### Context
