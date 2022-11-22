@@ -3,8 +3,8 @@ name: CI
 on:
   push:
   pull_request:
-# schedule:
-#   - cron:  '*/10 * * * *'
+  schedule:
+    - cron:  '*/30 * * * *'
 
 env:
   TERM: dumb
@@ -38,19 +38,19 @@ jobs:
           format: 'table'
           severity: 'CRITICAL,HIGH'
 
-      - name: Create Issue on Failed workflow
-        if: ${{ failure() }}
-        uses: dacbd/create-issue-action@main
-        with:
-          # token: ${{ github.token }}
-          token: ${{ secrets.PAT }}
-          repo: private-test
-          title: Action workflow failed.
-          body: |
-            ### Context
-            [Failed Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            [Codebase](https://github.com/${{ github.repository }}/tree/${{ github.sha }})
-            Workflow name - `${{ github.workflow }}`
-            Job -           `${{ github.job }}`
-            status -        `${{ job.status }}`
-          assignees: komamitsu
+#     - name: Create Issue on Failed workflow
+#       if: ${{ failure() }}
+#       uses: dacbd/create-issue-action@main
+#       with:
+#         # token: ${{ github.token }}
+#         token: ${{ secrets.PAT }}
+#         repo: private-test
+#         title: Action workflow failed.
+#         body: |
+#           ### Context
+#           [Failed Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+#           [Codebase](https://github.com/${{ github.repository }}/tree/${{ github.sha }})
+#           Workflow name - `${{ github.workflow }}`
+#           Job -           `${{ github.job }}`
+#           status -        `${{ job.status }}`
+#         assignees: komamitsu
