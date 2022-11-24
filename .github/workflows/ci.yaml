@@ -44,13 +44,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "GitHub Action build result: ${{ job.status }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
+              "text": "GitHub Action build result (text): ${{ job.status }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action build result (block) : ${{ job }}\n${{ github.event }}"
+                    "text": "GitHub Action build result (block): ${{ job.status }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
                   }
                 }
               ]
