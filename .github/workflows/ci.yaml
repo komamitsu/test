@@ -44,13 +44,12 @@ jobs:
         with:
           payload: |
             {
-              "text": "The vulnerability check (HIGH) on `${{ github.repository }}` failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The vulnerability check (HIGH) on `${{ github.repository }}` failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                    "text": "The vulnerability check ($\text{\color{orange}{HIGH}}$) on `${{ github.repository }}` failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
                   }
                 }
               ]
