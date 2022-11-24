@@ -56,3 +56,33 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.MY_SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: Run Trivy vulnerability scanner in repo mode #1
+        if: always()
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: test:latest
+          ignore-unfixed: true
+          exit-code: '1'
+          format: 'table'
+          severity: 'CRITICAL'
+
+      - name: Post the failure to Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":octagonal_sign: The vulnerability check (severity: CRITICAL) on `${{ github.repository }}` <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})|failed>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.MY_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
