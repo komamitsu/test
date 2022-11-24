@@ -31,7 +31,6 @@ jobs:
         if: always()
         uses: aquasecurity/trivy-action@master
         with:
-          # scan-type: 'fs'
           image-ref: test:latest
           ignore-unfixed: true
           exit-code: '1'
@@ -49,7 +48,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The vulnerability check (HIGH) on <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})|${{ github.repository }}>"
+                    "text": ":warning: The vulnerability check (severity: HIGH) on `${{ github.repository }}` <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})|failed>"
                   }
                 }
               ]
