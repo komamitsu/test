@@ -44,7 +44,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "GitHub Action build result: ${{ toJSON(job) }}\n${{ toJSON(github.event) }}",
+              "text": "GitHub Action build result: ${{ job.status }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
               "blocks": [
                 {
                   "type": "section",
