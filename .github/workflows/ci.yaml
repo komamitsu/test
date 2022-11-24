@@ -36,7 +36,7 @@ jobs:
           ignore-unfixed: true
           exit-code: '1'
           format: 'table'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
 
       - name: Post the failure to Slack
         if: failure()
@@ -44,13 +44,13 @@ jobs:
         with:
           payload: |
             {
-              "text": "GitHub Action build result (text): ${{ job.status }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
+              "text": "The vulnerability check (CRITICAL) on ${{ html_url }} failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action build result (block): ${{ job.status }} (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                    "text": "The vulnerability check (CRITICAL) on ${{ html_url }} failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
                   }
                 }
               ]
@@ -59,3 +59,34 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.MY_SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
+      - name: Run Trivy vulnerability scanner in repo mode #1
+        if: always()
+        uses: aquasecurity/trivy-action@master
+        with:
+          # scan-type: 'fs'
+          image-ref: test:latest
+          ignore-unfixed: true
+          exit-code: '1'
+          format: 'table'
+          severity: 'HIGH'
+
+      - name: Post the failure to Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "text": "The vulnerability check (HIGH) on ${{ html_url }} failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "The vulnerability check (HIGH) on ${{ html_url }} failed (${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.MY_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
