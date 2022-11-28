@@ -3,8 +3,9 @@ name: CI
 on:
   push:
   pull_request:
-  schedule:
-    - cron:  '30 */6 * * *'
+  workflow_dispatch:
+      # schedule:
+      # - cron:  '30 */6 * * *'
 
 env:
   TERM: dumb
@@ -15,74 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up JDK 8
-        uses: actions/setup-java@v3
-        with:
-          java-version: '8'
-          distribution: 'temurin'
+      - name: Debug #1
+        run: ls -l
 
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: false
-          tags: test:latest
-
-      - name: Run Trivy vulnerability scanner in repo mode #1
-        if: always()
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: test:latest
-          ignore-unfixed: true
-          exit-code: '1'
-          format: 'table'
-          severity: 'HIGH'
-
-      - name: Post the failure to Slack
-        if: failure()
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":warning: The vulnerability check (severity: HIGH) on `${{ github.repository }}` <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})|failed>"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.MY_SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-      - name: Run Trivy vulnerability scanner in repo mode #1
-        if: always()
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: test:latest
-          ignore-unfixed: true
-          exit-code: '1'
-          format: 'table'
-          severity: 'CRITICAL'
-
-      - name: Post the failure to Slack
-        if: failure()
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":octagonal_sign: The vulnerability check (severity: CRITICAL) on `${{ github.repository }}` <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})|failed>"
-                  }
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.MY_SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
